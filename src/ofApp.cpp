@@ -26,7 +26,6 @@ void ofApp::setup(){
     }
 
 
-
     settings[0] = sense_angle;
     settings[1] = sense_distance;
     settings[2] = (float) width;
@@ -34,7 +33,6 @@ void ofApp::setup(){
     settings[4] = speed;
     settings[5] = diffusion;
     settings[6] = decay;
-    
 
     Field.allocate(width*height*sizeof(float),field,GL_STATIC_DRAW);
     FieldTemp.allocate(width*height*sizeof(float),field,GL_STATIC_DRAW);
@@ -42,6 +40,9 @@ void ofApp::setup(){
     ParticleY.allocate(nParticles*sizeof(float),pY,GL_STATIC_DRAW);
     ParticleHeading.allocate(nParticles*sizeof(float),pH,GL_STATIC_DRAW);
     Settings.allocate(amountSettings*sizeof(float),settings,GL_STATIC_DRAW);
+    texture.allocate(width,height,GL_RGBA8);
+    MousePos.allocate(sizeof(int) * 5,NULL,GL_STATIC_DRAW);
+
 
     Field.bindBase(GL_SHADER_STORAGE_BUFFER,0);
     FieldTemp.bindBase(GL_SHADER_STORAGE_BUFFER,1);
@@ -49,15 +50,19 @@ void ofApp::setup(){
     ParticleY.bindBase(GL_SHADER_STORAGE_BUFFER,3);
     ParticleHeading.bindBase(GL_SHADER_STORAGE_BUFFER,4);
     Settings.bindBase(GL_SHADER_STORAGE_BUFFER,5);
+    texture.bindAsImage(6,GL_WRITE_ONLY);
+    MousePos.bindBase(GL_SHADER_STORAGE_BUFFER,7);
+
 
     particleShader.setupShaderFromFile(GL_COMPUTE_SHADER,"../../src/shaders/particleshader.cs");
     particleShader.linkProgram();  
 
+    interactionShader.setupShaderFromFile(GL_COMPUTE_SHADER,"../../src/shaders/interactionshader.cs");
+    interactionShader.linkProgram();
+
     fieldShader.setupShaderFromFile(GL_COMPUTE_SHADER,"../../src/shaders/fieldshader.cs");
     fieldShader.linkProgram();  
     
-    texture.allocate(width,height,GL_RGBA8);
-    texture.bindAsImage(6,GL_WRITE_ONLY);
 
     delete[] field;
     delete[] pX;
@@ -71,8 +76,15 @@ void ofApp::update(){
     int width = ofGetWidth();
     int height = ofGetHeight(); 
 
-    if(pressed) {
+    if(pressed < 60) {
+        pressed++;
 
+        MousePos.updateData(sizeof(int)*5,mouse);
+        MousePos.bindBase(GL_SHADER_STORAGE_BUFFER,7);
+
+        interactionShader.begin();
+        interactionShader.dispatchCompute(width/20,height/20,1);
+        interactionShader.end();
     }
 
     particleShader.begin();
@@ -102,20 +114,38 @@ void ofApp::draw(){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-    if(button == 0) {
-        mouseX = x;
-        mouseY = y;
-        pressed = true;
-    }
+        mouse[0] = x;
+        mouse[1] = y;
+        mouse[3] = button;
+        pressed = 0;
+}
 
+//--------------------------------------------------------------
+void ofApp::keyPressed(int key){
+    if(key == OF_KEY_UP) {
+        mouse[4] += 10;
+        std::cout << "Radius = " << mouse[4] << std::endl;
+    }
+    else if(key == OF_KEY_DOWN) {
+        mouse[4] -= 10;
+        std::cout << "Radius = " << mouse[4] << std::endl;
+    }
+    else if(key == OF_KEY_RIGHT) {
+        mouse[2] += 10;
+        std::cout << "Amount = " << mouse[2] << std::endl;
+    }
+    else if(key == OF_KEY_LEFT) {
+        mouse[2] -= 10;
+        std::cout << "Amount = " << mouse[2] << std::endl;
+    }
+    
+    
+    
 }
 
 
 /*
-//--------------------------------------------------------------
-void ofApp::keyPressed(int key){
 
-}
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){

@@ -1,12 +1,13 @@
 #include "ofMain.h"
-#include "ofApp.h"
+#include "ofApp.h" 
+#include <X11/Xlib.h>
 
 //========================================================================
 int main(int argc, char** argv){
 
 	int width = 500, height = 500, nParticles = 24000;
 	float angle, distance, speed, diff, decay;
-	bool fullscreen = false;
+	bool fullscreen = false, screensaver = false;
 
 	std::stringstream additionalInfo;
 
@@ -30,7 +31,6 @@ int main(int argc, char** argv){
                 std::cout << "--sense-angle angle\t : angle between sense rays" << std::endl;
                 std::cout << "--speed speed\t : distance per move of particle (too high and skips pixels)" << std::endl;
                 std::cout << "--fullscreen\t : Enables fullscreen mode" << std::endl;
-
                 exit(0);
             }
             if(std::string(argv[i-1]).compare("-w") == 0) {
@@ -73,15 +73,16 @@ int main(int argc, char** argv){
 				additionalInfo << ", fullscreen = True";
             }
         }
-        std::cout << " Using:width = " << width << ", height = " << height << ", nParticles = " << nParticles << additionalInfo.str() << std::endl;
+        std::cout << "Using: width = " << width << ", height = " << height << ", nParticles = " << nParticles << additionalInfo.str() << std::endl;
     }
 
 	ofGLFWWindowSettings settings;
 	settings.setSize(width,height);
 	settings.windowMode = fullscreen ? OF_FULLSCREEN : OF_WINDOW;
-	if(!fullscreen)
+	if(!fullscreen && !screensaver)
 		settings.resizable = false;
-    ofCreateWindow(settings);
+    auto window = ofCreateWindow(settings);
+
 	
 	ofRunApp(app);
 

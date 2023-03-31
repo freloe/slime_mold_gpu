@@ -14,12 +14,12 @@ class ofApp : public ofBaseApp{
 		float speed = 0.5f;
 		float diffusion = (1.0f/9.0f);
 		float decay = 0.85f;
-		bool pressed = false;
-		int mouseX, mouseY;
+		int pressed = 60;
+		int mouse[5];
 
-		ofBufferObject Field, FieldTemp, ParticleX, ParticleY, ParticleHeading, Settings;
+		ofBufferObject Field, FieldTemp, ParticleX, ParticleY, ParticleHeading, Settings, MousePos;
 		ofTexture texture;
- 		ofShader particleShader, fieldShader;
+ 		ofShader particleShader, fieldShader, interactionShader;
 
 	public:
 		void setNumParticles(uint num) {
@@ -56,8 +56,9 @@ class ofApp : public ofBaseApp{
 
 		void mousePressed(int x, int y, int button);
 
-		/*
 		void keyPressed(int key);
+
+		/*
 		void keyReleased(int key);
 		void mouseMoved(int x, int y );
 		void mouseDragged(int x, int y, int button);
