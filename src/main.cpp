@@ -21,7 +21,7 @@ int main(int argc, char** argv){
         for(int i = 1; i < argc; ++i) {
             if(std::string(argv[i]).compare("--help") == 0) {
                 std::cout << "\t\t------Slime Mold GPU Simulation------" << std::endl; 
-                std::cout << "\t\t----Made by Frederick Loeffel----" << std::endl << std::endl; 
+                std::cout << "\t\t  ----Made by Frederick Loeffel----" << std::endl << std::endl;
                 std::cout << "usage: ./SlimeMold [option]" << std::endl;
                 std::cout << "Options and arguments:" << std::endl;
                 std::cout << "-w width\t : width of the window and field in pixel" << std::endl;

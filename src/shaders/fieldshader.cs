@@ -24,7 +24,7 @@ void decay(uint idx) {
 
 vec4 color(float t)
 {
- float coltab[]={0.5, 0.5, 0.5	,	0.5, 0.5, 0.5	,2.0, 1.0, 0.0	,0.50, 0.20, 0.25};
+ float coltab[12]={0.5, 0.5, 0.5	,	0.5, 0.5, 0.5	,2.0, 1.0, 0.0	,0.50, 0.20, 0.25};
  vec4 col;
  col.r = coltab[0]+coltab[3]*cos(2*3.1416*(coltab[6]*t+coltab[9]));
  col.g = coltab[1]+coltab[4]*cos(2*3.1416*(coltab[7]*t+coltab[10]));

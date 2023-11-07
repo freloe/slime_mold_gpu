@@ -19,7 +19,7 @@ void ofApp::setup(){
     for(int i = 0; i < width*height; ++i)
         field[i] = 0.0f; 
 
-    for(int i = 0; i < nParticles; ++i) {
+    for(uint i = 0; i < nParticles; ++i) {
         pX[i] = rand() % width;
         pY[i] = rand() % height;
         pH[i] = rand() % 360;
@@ -118,6 +118,14 @@ void ofApp::mousePressed(int x, int y, int button){
         mouse[1] = y;
         mouse[3] = button;
         pressed = 0;
+}
+
+//--------------------------------------------------------------
+void ofApp::mouseDragged(int x, int y, int button) {
+    mouse[0] = x;
+    mouse[1] = y;
+    mouse[3] = button;
+    pressed = 55;
 }
 
 //--------------------------------------------------------------
